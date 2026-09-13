@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#9bd24b" />
+    <meta name="description" content="월별로 읽은 책과 인상 깊은 문장, 별점을 기록하는 귀여운 독서 기록장" />
+    <title>책잎 — 나의 독서 기록</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23a8d954'/%3E%3Cpath d='M17 19c7-2 13 0 15 4v27c-3-4-8-6-15-4V19Zm30 0c-7-2-13 0-15 4v27c3-4 8-6 15-4V19Z' fill='%23fffdf2' stroke='%23486325' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M32 17c3-6 8-7 13-7-1 6-5 10-13 10' fill='%236fa62b'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="#" aria-label="책잎 홈">
+          <span class="brand-icon" aria-hidden="true">🌱</span>
+          <span><strong>책잎</strong><small>한 장씩 자라는 나의 독서 기록</small></span>
+        </a>
+        <button id="addBookTop" class="add-button secondary-add" type="button"><span>＋</span> 책 기록하기</button>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="pageTitle">
+          <div class="intro-copy">
+            <p class="kicker">MY LITTLE BOOK GARDEN</p>
+            <h1 id="pageTitle">읽은 만큼,<br /><em>마음에 잎이 나요.</em></h1>
+            <p>매달 만난 책과 오래 간직하고 싶은 문장을<br class="desktop-only" /> 차곡차곡 모아보세요.</p>
+          </div>
+          <div class="year-summary" aria-label="올해의 독서 요약">
+            <div class="year-pill">2026년</div>
+            <div class="summary-item"><strong id="yearBookCount">0</strong><span>읽은 책</span></div>
+            <div class="summary-divider"></div>
+            <div class="summary-item"><strong id="averageRating">–</strong><span>평균 별점</span></div>
+            <div class="sprout-meter" aria-hidden="true"><span id="sproutProgress"></span></div>
+            <p id="summaryMessage">첫 번째 책잎을 심어볼까요?</p>
+          </div>
+        </section>
+
+        <section class="records-section" aria-labelledby="monthHeading">
+          <div class="section-head">
+            <div>
+              <p class="section-label">MONTHLY SHELF</p>
+              <h2 id="monthHeading"><span id="selectedMonthTitle">9월</span>의 책장</h2>
+            </div>
+            <div class="month-stepper" aria-label="월 이동">
+              <button id="prevMonth" type="button" aria-label="이전 달">←</button>
+              <button id="nextMonth" type="button" aria-label="다음 달">→</button>
+            </div>
+          </div>
+
+          <nav id="monthNav" class="month-nav" aria-label="월 선택"></nav>
+
+          <div class="shelf-meta">
+            <span><b id="monthBookCount">0권</b>을 읽었어요</span>
+            <button id="addBookInline" type="button">이달의 책 추가하기 ＋</button>
+          </div>
+
+          <div id="bookGrid" class="book-grid" aria-live="polite"></div>
+          <div id="emptyState" class="empty-state">
+            <div class="empty-sticker" aria-hidden="true">📖<span>✦</span></div>
+            <h3>아직 꽂힌 책이 없어요</h3>
+            <p>이번 달에 읽은 책을 기록하면<br />나만의 책장이 조금씩 채워져요.</p>
+            <button id="addFirstBook" class="add-button" type="button"><span>＋</span> 첫 책 기록하기</button>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <span>책잎 · 2026</span>
+        <p>좋아하는 문장을 오래오래 간직해요 <span aria-hidden="true">☘</span></p>
+      </footer>
+    </div>
+
+    <dialog id="bookDialog" class="book-dialog">
+      <form id="bookForm" method="dialog" novalidate>
+        <div class="dialog-top">
+          <div>
+            <p class="section-label">BOOK NOTE</p>
+            <h2 id="dialogTitle">새 책 기록하기</h2>
+          </div>
+          <button id="closeDialog" class="icon-button" type="button" aria-label="닫기">×</button>
+        </div>
+
+        <input id="bookId" type="hidden" />
+        <div class="form-row two-columns">
+          <label>책 제목 <b>*</b><input id="bookTitle" type="text" maxlength="80" placeholder="어떤 책을 읽었나요?" required /></label>
+          <label>지은이<input id="bookAuthor" type="text" maxlength="50" placeholder="작가 이름" /></label>
+        </div>
+
+        <div class="form-row two-columns compact-row">
+          <label>읽은 달
+            <select id="bookMonth" aria-label="읽은 달"></select>
+          </label>
+          <fieldset class="rating-field">
+            <legend>나의 별점 <b>*</b></legend>
+            <div id="ratingInput" class="rating-input" aria-label="별점 선택"></div>
+          </fieldset>
+        </div>
+
+        <label class="wide-label">인상 깊었던 부분
+          <textarea id="bookQuote" maxlength="260" placeholder="마음에 오래 남은 문장이나 장면을 적어주세요."></textarea>
+          <span class="char-count"><b id="quoteCount">0</b>/260</span>
+        </label>
+
+        <label class="wide-label">나의 한줄 감상
+          <input id="bookReview" type="text" maxlength="120" placeholder="이 책을 한 문장으로 기억한다면?" />
+        </label>
+
+        <p id="formError" class="form-error" role="alert"></p>
+        <div class="dialog-actions">
+          <button id="deleteBook" class="delete-button" type="button">기록 삭제</button>
+          <span></span>
+          <button id="cancelDialog" class="cancel-button" type="button">취소</button>
+          <button class="save-button" type="submit">책장에 꽂기</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js" defer></script>
+  </body>
+</html>
